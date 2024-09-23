@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Піца",
+        "description": "Смачна піца",
+        "price": 100,
+        "dish_type": "Основна"
+    },
+    {
+        "name": "Салат",
+        "description": "Свежий салат",
+        "price": 50,
+        "dish_type": "Закуска"
+    }
+]

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card">
+          <div class="card-body">
+            <h1 class="card-title">{{ cook.get_full_name }}</h1>
+            <p class="card-text"><strong>Years of Experience:</strong> {{ cook.years_of_experience }}</p>
+
+            <h2 class="mt-4">Dishes</h2>
+            {% if cook.dishes.all %}
+              <ul class="list-group">
+                {% for dish in cook.dishes.all %}
+                  <li class="list-group-item">{{ dish.name }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="text-muted">No dishes found for this cook.</p>
+            {% endif %}
+            
+            <div class="mt-4 d-flex justify-content-between">
+              <a href="{% url 'kitchen:cook-update' cook.id %}" class="btn btn-primary">Edit</a>
+              <a href="{% url 'kitchen:cook-delete' cook.id %}" class="btn btn-danger">Delete</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <a href="{% url 'kitchen:cook-list' %}" class="btn btn-secondary">Back to Cook List</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
