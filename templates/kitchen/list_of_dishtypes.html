@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="d-flex justify-content-between align-items-center">
+      List of Dish Types
+      <a class="btn btn-primary" href="{% url 'kitchen:dish-type-create' %}">+</a>
+    </h1>
+  
+    <form method="get" action="{% url 'kitchen:dish-type-list' %}" class="form-inline mb-3">
+      <div class="form-group mx-sm-3 mb-2">
+        <input type="text" name="q" class="form-control" placeholder="Search dish types..." value="{{ request.GET.q }}">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2">Search</button>
+    </form>
+
+    {% if dishtypes %}
+      <table class="table table-striped mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dishtype in dishtypes %}
+            <tr>
+              <td>{{ dishtype.id }}</td>
+              <td>{{ dishtype.name }}</td>
+              <td>
+                <a href="{% url 'kitchen:dish-type-update' pk=dishtype.id %}" class="btn btn-warning btn-sm">Update</a>
+                <a href="{% url 'kitchen:dish-type-delete' pk=dishtype.id %}" class="btn btn-danger btn-sm">Delete</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert alert-info mt-3">There are no dish types in the kitchen.</div>
+    {% endif %}
+  </div>
+{% endblock %}

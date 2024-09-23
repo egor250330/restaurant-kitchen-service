@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1>Welcome to the Kitchen!</h1>
+
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Top Dishes</h2>
+        <ul class="list-group">
+          {% for dish in dishes %}
+            <li class="list-group-item">{{ dish.name }}</li>
+          {% empty %}
+            <li class="list-group-item">No dishes available.</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <h2>Top Cooks</h2>
+        <ul class="list-group">
+          {% for cook in cooks %}
+            <li class="list-group-item">{{ cook.username }}</li>
+          {% empty %}
+            <li class="list-group-item">No cooks available.</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <h2>Dish Types</h2>
+        <ul class="list-group">
+          {% for dishtype in dishtypes %}
+            <li class="list-group-item">{{ dishtype.name }}</li>
+          {% empty %}
+            <li class="list-group-item">No dish types available.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <form action="{% url 'logout' %}" method="post" class="mt-4">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+  </div>
+{% endblock %}
