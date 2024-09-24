@@ -1,10 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import TemplateView
-
+from django.views.generic import TemplateView, View
 from kitchen.forms import (
     DishForm,
     DishTypeForm,
@@ -15,7 +14,9 @@ from kitchen.forms import (
     CookSearchForm
 )
 from kitchen.models import Dish, DishType, Cook
+import logging
 
+logger = logging.getLogger(__name__)
 
 class DishListView(generic.ListView):
     model = Dish
@@ -48,9 +49,6 @@ class DishCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = 'kitchen/form.html'
     extra_context = {'title': 'Add New Dish'}
 
-    def form_invalid(self, form):
-        return super().form_invalid(form)
-
     def get_success_url(self):
         return reverse_lazy('kitchen:dish-list')
 
@@ -62,7 +60,7 @@ class DishUpdateView(LoginRequiredMixin, generic.UpdateView):
     extra_context = {'title': 'Update Dish'}
 
     def get_success_url(self):
-        return reverse('kitchen:dish-detail', args=[self.object.id])
+        return reverse_lazy('kitchen:dish-detail', args=[self.object.id])
 
 
 class DishDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -93,13 +91,19 @@ class DishTypeCreateView(LoginRequiredMixin, generic.CreateView):
     model = DishType
     form_class = DishTypeForm
     template_name = 'kitchen/form.html'
-    extra_context = {'title': 'Add New Dish'}
+    extra_context = {'title': 'Add New Dish Type'}
+
+    def get_success_url(self):
+        return reverse_lazy('kitchen:dish-type-list')
 
 
 class DishTypeUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = DishType
     form_class = DishTypeForm
     template_name = 'kitchen/form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('kitchen:dish-type-list')
 
 
 class DishTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -138,11 +142,17 @@ class CookCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = 'kitchen/form.html'
     extra_context = {'title': 'Add New Cook'}
 
+    def get_success_url(self):
+        return reverse_lazy('kitchen:cook-list')
+
 
 class CookUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Cook
     form_class = CookForm
     template_name = 'kitchen/form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('kitchen:cook-list')
 
 
 class CookDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -162,7 +172,10 @@ class HomeView(TemplateView):
         return context
 
 
-class UserRegistrationView(generic.View):
+logger = logging.getLogger(__name__)
+
+
+class UserRegistrationView(View):
     def get(self, request):
         form = UserRegistrationForm()
         return render(request, 'registration/register.html', {'form': form})
@@ -170,8 +183,10 @@ class UserRegistrationView(generic.View):
     def post(self, request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
+            form.save()
+            logger.info("User registered successfully: %s", form.cleaned_data['username'])
             return redirect('login')
+        else:
+            logger.warning("Registration failed. Errors: %s", form.errors)
+
         return render(request, 'registration/register.html', {'form': form})

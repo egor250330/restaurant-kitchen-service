@@ -57,20 +57,23 @@ class CookForm(forms.ModelForm):
 
 
 class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, label='Password')
     password_confirm = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
+    years_of_experience = forms.IntegerField(label='Years of Experience', min_value=0, required=True)
 
     class Meta:
         model = Cook
-        fields = ['username', 'email', 'password', 'years_of_experience']
+        fields = ['username', 'email', 'password', 'password_confirm', 'years_of_experience']
 
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         password_confirm = cleaned_data.get("password_confirm")
 
-        if password != password_confirm:
+        if password and password_confirm and password != password_confirm:
             raise forms.ValidationError("Passwords do not match")
+
+        return cleaned_data
 
     def save(self, commit=True):
         cook = super().save(commit=False)
