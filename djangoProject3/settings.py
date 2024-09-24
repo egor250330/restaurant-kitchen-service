@@ -29,9 +29,10 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", 'django-insecure-fa1)z(k5m-u$w7
 os.getenv("django-insecure-fa1)z(k5m-u$w7q3eh0=$8bw5n*b2ur0n_1y-$8hx$kk9%lmud")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', ) != "False"
+DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost",
+                 "restaurant-kitchen-service-1-2vwz.onrender.com"]
 
 # Application definition
 
